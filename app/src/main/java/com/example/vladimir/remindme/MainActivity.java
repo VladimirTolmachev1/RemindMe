@@ -1,10 +1,19 @@
 package com.example.vladimir.remindme;
 
 import android.os.Bundle;
+import android.os.Debug;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+
+import com.example.vladimir.remindme.adapter.TabsPagerFragmentAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -12,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         initToolBar();
         initNavigationView();
+        initTabs();
     }
 
     private void initToolBar() {
@@ -36,7 +47,39 @@ public class MainActivity extends AppCompatActivity {
         toolbar.inflateMenu(R.menu.menu);
     }
 
+    private void initTabs() {
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_lyout);
+
+        TabsPagerFragmentAdapter adapter = new TabsPagerFragmentAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
     private void initNavigationView() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle my_toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
+        drawerLayout.setDrawerListener(my_toggle);
+        my_toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                drawerLayout.closeDrawers();
+
+                switch (menuItem.getItemId()){
+                    case 0:
+                        showNotificationTab();
+                }
+
+                return true;
+            }
+        });
+    }
+
+    private void showNotificationTab(){
+        viewPager.setCurrentItem(Constants.TAB_TWO);
     }
 }

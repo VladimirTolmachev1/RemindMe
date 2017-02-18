@@ -2,8 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/first_item"
         android:orderInCategory="1"
-        android:title="@string/menu_item_notivication"
+        android:title="@string/menu_item_notification"
         android:icon="@drawable/message_text"
         />
 
