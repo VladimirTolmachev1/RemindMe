@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.vladimir.remindme.R;
 import com.example.vladimir.remindme.fragment.AbstractTabFragment;
 import com.example.vladimir.remindme.fragment.BirthdaysFragment;
 import com.example.vladimir.remindme.fragment.HistoryFragment;
