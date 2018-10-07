@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RemindMe</string>
     <string name="search_title">Search</string>
-    <string name="menu_item_notification">Notification</string>
+    <string name="menu_item_author">About author</string>
     <string name="txt_1">My First Text</string>
     <string name="open_nav">Open</string>
     <string name="close_nav">Close</string>
@@ -10,5 +10,10 @@
     <string name="tab_history">History</string>
     <string name="tab_ideas">Ideas</string>
     <string name="tab_todo">Todo</string>
-    <string name="tab_birthdays">Birtdays</string>
+    <string name="tab_birthdays">Birthdays</string>
+
+    <!-- Item sub menu values -->
+    <string name="sub_edit">Edit</string>
+    <string name="sub_delete">Delete</string>
+    <string name="sub_share">Share</string>
 </resources>

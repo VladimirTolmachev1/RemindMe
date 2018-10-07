@@ -1,5 +1,6 @@
 package com.example.vladimir.remindme;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (menuItem.getItemId()){
                     case R.id.first_item:
-                        showNotificationTab();
+                        showAuthorActivity();
                 }
 
                 return true;
@@ -89,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void showNotificationTab(){
-        viewPager.setCurrentItem(Constants.TAB_TWO);
+    private void showAuthorActivity(){
+        Intent intent = new Intent(MainActivity.this, AuthorActivity.class);
+        startActivity(intent);
     }
 }
