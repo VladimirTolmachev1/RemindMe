@@ -1,10 +1,13 @@
 <resources>
-    <string name="app_name">RemindMe</string>
-    <string name="search_title">Search</string>
+    <string name="app_name">Remind Me</string>
     <string name="menu_item_author">About author</string>
     <string name="txt_1">My First Text</string>
     <string name="open_nav">Open</string>
     <string name="close_nav">Close</string>
+
+    <!-- Main Menu Items -->
+    <string name="add_new_item">Create Card</string>
+    <string name="delete_all_items">Delete All</string>
 
     <!-- Tabs values-->
     <string name="tab_history">History</string>
@@ -16,4 +19,17 @@
     <string name="sub_edit">Edit</string>
     <string name="sub_delete">Delete</string>
     <string name="sub_share">Share</string>
+
+    <!-- Item labels -->
+    <string name="item_title">Title</string>
+    <string name="item_content">Content</string>
+    <string name="item_type">Type</string>
+    <string name="item_date">Reminder date</string>
+    <string name="item_time">Reminder time</string>
+    <string name="type_todo">ToDo</string>
+    <string name="type_bday">Birth Day</string>
+    <string name="type_idea">Idea</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_select_date">SELECT DATE</string>
+    <string name="btn_select_time">SELECT TIME</string>
 </resources>

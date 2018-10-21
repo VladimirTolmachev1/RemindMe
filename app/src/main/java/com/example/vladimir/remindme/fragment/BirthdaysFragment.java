@@ -40,7 +40,7 @@ public class BirthdaysFragment extends AbstractTabFragment {
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerViewBday);
         rv.setLayoutManager(new LinearLayoutManager(context));
-        rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
+//        rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
 
         return view;
     }

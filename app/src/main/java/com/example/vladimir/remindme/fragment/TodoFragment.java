@@ -40,7 +40,7 @@ public class TodoFragment extends AbstractTabFragment {
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerViewTodo);
         rv.setLayoutManager(new LinearLayoutManager(context));
-        rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
+//        rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
 
         return view;
     }

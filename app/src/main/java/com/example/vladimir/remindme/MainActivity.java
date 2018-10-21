@@ -13,10 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 
+import com.example.vladimir.remindme.Interfaces.RemindOnClickListener;
 import com.example.vladimir.remindme.adapter.TabsFragmentAdapter;
 
-public class MainActivity extends AppCompatActivity {
+import io.realm.Realm;
+
+public class MainActivity extends AppCompatActivity{
 
     private static final int LAYOUT = R.layout.activity_main;
 
@@ -24,11 +28,15 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
 
+    private Realm realmDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppThemeDefault);
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
+
+        realmDb = Realm.getDefaultInstance();
 
         initToolBar();
         initNavigationView();
@@ -42,7 +50,16 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                return false;
+                switch (item.getItemId()){
+                    case R.id.item_create:
+                        createItemAction();
+                        break;
+
+                    case R.id.delete_all:
+                        break;
+                }
+
+                return true;
             }
         });
 
@@ -86,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createItemAction();
             }
         });
     }
@@ -93,5 +111,23 @@ public class MainActivity extends AppCompatActivity {
     private void showAuthorActivity(){
         Intent intent = new Intent(MainActivity.this, AuthorActivity.class);
         startActivity(intent);
+    }
+
+    private void createItemAction(){
+        Intent intent = new Intent(MainActivity.this, EditActivity.class);
+        startActivityForResult(intent, 13);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        realmDb.close();
     }
 }
