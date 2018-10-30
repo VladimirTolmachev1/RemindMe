@@ -32,4 +32,13 @@
     <string name="btn_save">Save</string>
     <string name="btn_select_date">SELECT DATE</string>
     <string name="btn_select_time">SELECT TIME</string>
+
+    <!-- Author view -->
+    <string name="avaImg">Author avatar</string>
+    <string name="author_name">Vladimir Tolmachev</string>
+    <string name="author_email">Email: vladimir.tolmachev123@gmail.com</string>
+    <string name="author_git">GIT: https://github.com/VladimirTolmachev1</string>
+
+
+    <string name="share_using">Share with</string>
 </resources>

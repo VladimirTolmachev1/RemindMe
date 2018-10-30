@@ -6,31 +6,26 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 
-import com.example.vladimir.remindme.Interfaces.RemindOnClickListener;
 import com.example.vladimir.remindme.MainActivity;
 import com.example.vladimir.remindme.R;
 import com.example.vladimir.remindme.adapter.RemindListAdapter;
-import com.example.vladimir.remindme.dto.RemindDTO;
 import com.example.vladimir.remindme.models.Item;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by vladimir on 11.02.2017.
  */
 
-public class HistoryFragment extends AbstractTabFragment {
+public class HistoryFragment extends AbstractTabFragment implements MainActivity.FragmentListener{
 
     private static final int LAYOUT = R.layout.fragment_history;
-    private Realm realmDb;
 
     public static HistoryFragment getInsatnce(Context context){
         Bundle args = new Bundle();
@@ -49,38 +44,51 @@ public class HistoryFragment extends AbstractTabFragment {
 
         realmDb = Realm.getDefaultInstance();
 
+        ((MainActivity) getActivity()).setFragmentListener(this);
+
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerView);
         rv.setLayoutManager(new LinearLayoutManager(context));
 
+        cardList = gelAllCards();
+        listAdapter = new RemindListAdapter(getActivity(), cardList, this);
 
-
-        rv.setAdapter(new RemindListAdapter(getActivity(), gelAllCards()));
+        rv.setAdapter(listAdapter);
 
         return view;
     }
 
     private List<Item> gelAllCards(){
         realmDb.beginTransaction();
-        List<Item> cardList = realmDb.where(Item.class).findAll();
+        List<Item> resultList = realmDb.where(Item.class).findAll();
 
         realmDb.commitTransaction();
 
-        return cardList;
-    }
-
-    private List<RemindDTO> createMockRemindListData() {
-        List<RemindDTO> listData = new ArrayList<>();
-        listData.add(new RemindDTO("Item 1"));
-        listData.add(new RemindDTO("Item 2"));
-        listData.add(new RemindDTO("Item 3"));
-        listData.add(new RemindDTO("Item 4"));
-        listData.add(new RemindDTO("Item 5"));
-        listData.add(new RemindDTO("Item 6"));
-
-        return listData;
+        return resultList;
     }
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+
+    @Override
+    public void updateFragmentList() {
+        if(listAdapter != null) {
+            listAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void deleteFragmentList() {
+        final RealmResults<Item> result = realmDb.where(Item.class).findAll();
+
+        realmDb.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                result.deleteAllFromRealm();
+                listAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

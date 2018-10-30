@@ -1,11 +1,12 @@
 package com.example.vladimir.remindme.models;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Item extends RealmObject {
+public class Item extends RealmObject{
 
     @PrimaryKey
     private String id;

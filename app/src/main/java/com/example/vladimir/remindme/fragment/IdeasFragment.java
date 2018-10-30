@@ -9,18 +9,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.vladimir.remindme.MainActivity;
 import com.example.vladimir.remindme.R;
 import com.example.vladimir.remindme.adapter.RemindListAdapter;
-import com.example.vladimir.remindme.dto.RemindDTO;
+import com.example.vladimir.remindme.models.Item;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by vladimir on 11.02.2017.
  */
 
-public class IdeasFragment extends AbstractTabFragment {
+public class IdeasFragment extends AbstractTabFragment implements MainActivity.FragmentListener{
+
     private static final int LAYOUT = R.layout.fragment_ideas;
 
     public static IdeasFragment getInsatnce(Context context){
@@ -37,27 +41,51 @@ public class IdeasFragment extends AbstractTabFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
+        realmDb = Realm.getDefaultInstance();
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerViewIdeas);
         rv.setLayoutManager(new LinearLayoutManager(context));
-//        rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
+
+        cardList = gelAllCards();
+        listAdapter = new RemindListAdapter(getActivity(), cardList, this);
+
+        rv.setAdapter(listAdapter);
 
         return view;
     }
 
-    private List<RemindDTO> createMockRemindListData() {
-        List<RemindDTO> listData = new ArrayList<>();
-        listData.add(new RemindDTO("Idea Item 1"));
-        listData.add(new RemindDTO("Idea Item 2"));
-        listData.add(new RemindDTO("Idea Item 3"));
-        listData.add(new RemindDTO("Idea Item 4"));
-        listData.add(new RemindDTO("Idea Item 5"));
-        listData.add(new RemindDTO("Idea Item 6"));
+    private List<Item> gelAllCards(){
+        realmDb.beginTransaction();
+        List<Item> resultList = realmDb.where(Item.class).equalTo("type", 0).findAll();
 
-        return listData;
+        realmDb.commitTransaction();
+
+        return resultList;
     }
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+
+    @Override
+    public void updateFragmentList() {
+        if(listAdapter != null) {
+            listAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void deleteFragmentList() {
+        final RealmResults<Item> result = realmDb.where(Item.class).findAll();
+
+        realmDb.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                result.deleteAllFromRealm();
+                listAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

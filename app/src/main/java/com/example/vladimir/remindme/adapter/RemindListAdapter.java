@@ -14,6 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.vladimir.remindme.EditActivity;
+import com.example.vladimir.remindme.Interfaces.RemindOnClickListener;
 import com.example.vladimir.remindme.R;
 import com.example.vladimir.remindme.models.Item;
 
@@ -27,9 +28,11 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
 
     private List<Item> listData;
     private Context mainContext;
-    public RemindListAdapter(Context context, List<Item> listData) {
+    private RemindOnClickListener remindOnClickListener;
+    public RemindListAdapter(Context context, List<Item> listData, RemindOnClickListener remindOnClickListener) {
         this.listData = listData;
         this.mainContext = context;
+        this.remindOnClickListener = remindOnClickListener;
     }
 
     @Override
@@ -41,6 +44,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
     @Override
     public void onBindViewHolder(final RemindViewHolder holder, final int position) {
         holder.title.setText(listData.get(position).getTitle());
+        holder.content.setText(listData.get(position).getContent());
         holder.subMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,12 +56,13 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.item_edit:
-                                Intent intent = new Intent(mainContext, EditActivity.class);
-                                ((Activity) mainContext).startActivityForResult(intent, 13);
+                                remindOnClickListener.onEditItemAction(listData.get(position).getId());
                                 break;
                             case R.id.item_share:
+                                remindOnClickListener.onShareItemAction(listData.get(position));
                                 break;
                             case R.id.item_delete:
+                                remindOnClickListener.onDeleteItemAction(listData.get(position).getId());
                                 break;
                         }
                         return false;
@@ -77,6 +82,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
 
         CardView cardView;
         TextView title;
+        TextView content;
         public ImageView subMenu;
 
         public RemindViewHolder(View itemView) {
@@ -84,6 +90,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
 
             cardView = (CardView) itemView.findViewById(R.id.cardView);
             title = (TextView) itemView.findViewById(R.id.title);
+            content = (TextView) itemView.findViewById(R.id.itemContent);
             subMenu = (ImageView) itemView.findViewById(R.id.subMenuItem);
         }
     }

@@ -9,21 +9,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.vladimir.remindme.MainActivity;
 import com.example.vladimir.remindme.R;
 import com.example.vladimir.remindme.adapter.RemindListAdapter;
-import com.example.vladimir.remindme.dto.RemindDTO;
+import com.example.vladimir.remindme.models.Item;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by vladimir on 11.02.2017.
  */
 
-public class TodoFragment extends AbstractTabFragment {
+public class TodoFragment extends AbstractTabFragment implements MainActivity.FragmentListener {
     private static final int LAYOUT = R.layout.fragment_todo;
 
-    public static TodoFragment getInsatnce(Context context){
+    public static TodoFragment getInsatnce(Context context) {
         Bundle args = new Bundle();
         TodoFragment fragment = new TodoFragment();
         fragment.setArguments(args);
@@ -38,27 +41,51 @@ public class TodoFragment extends AbstractTabFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
 
+        realmDb = Realm.getDefaultInstance();
+
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerViewTodo);
         rv.setLayoutManager(new LinearLayoutManager(context));
-//        rv.setAdapter(new RemindListAdapter(createMockRemindListData()));
+
+        cardList = gelAllCards();
+        listAdapter = new RemindListAdapter(getActivity(), cardList, this);
+
+        rv.setAdapter(listAdapter);
 
         return view;
     }
 
+    private List<Item> gelAllCards() {
+        realmDb.beginTransaction();
+        List<Item> resultList = realmDb.where(Item.class).equalTo("type", 1).findAll();
 
-    private List<RemindDTO> createMockRemindListData() {
-        List<RemindDTO> listData = new ArrayList<>();
-        listData.add(new RemindDTO("Todo Item 1"));
-        listData.add(new RemindDTO("Todo Item 2"));
-        listData.add(new RemindDTO("Todo Item 3"));
-        listData.add(new RemindDTO("Todo Item 4"));
-        listData.add(new RemindDTO("Todo Item 5"));
-        listData.add(new RemindDTO("Todo Item 6"));
+        realmDb.commitTransaction();
 
-        return listData;
+        return resultList;
     }
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+
+    @Override
+    public void updateFragmentList() {
+        if (listAdapter != null) {
+            listAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void deleteFragmentList() {
+        final RealmResults<Item> result = realmDb.where(Item.class).findAll();
+
+        realmDb.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                result.deleteAllFromRealm();
+                listAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
