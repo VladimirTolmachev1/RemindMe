@@ -1,8 +1,7 @@
 package com.example.vladimir.remindme.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,27 +12,30 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.example.vladimir.remindme.EditActivity;
 import com.example.vladimir.remindme.Interfaces.RemindOnClickListener;
 import com.example.vladimir.remindme.R;
 import com.example.vladimir.remindme.models.Item;
 
 import java.util.List;
 
-/**
- * Created by vladimir on 21.02.2017.
- */
+import io.realm.OrderedRealmCollection;
+import io.realm.RealmRecyclerViewAdapter;
 
-public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.RemindViewHolder> {
+public class RemindListAdapter extends RealmRecyclerViewAdapter<Item, RemindListAdapter.RemindViewHolder> {
 
     private List<Item> listData;
     private Context mainContext;
     private RemindOnClickListener remindOnClickListener;
+
+
     public RemindListAdapter(Context context, List<Item> listData, RemindOnClickListener remindOnClickListener) {
+        super((OrderedRealmCollection<Item>) listData, true);
+
         this.listData = listData;
         this.mainContext = context;
         this.remindOnClickListener = remindOnClickListener;
     }
+
 
     @Override
     public RemindViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -71,11 +73,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
                 popupMenu.show();
             }
         });
-    }
 
-    @Override
-    public int getItemCount() {
-        return listData.size();
     }
 
     class RemindViewHolder extends RecyclerView.ViewHolder{
@@ -94,7 +92,4 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
             subMenu = (ImageView) itemView.findViewById(R.id.subMenuItem);
         }
     }
-
-
-
 }
